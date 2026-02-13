@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest Marketing Suite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a3a3a;
+            --primary-light: #2d5555;
+            --accent: #d4af37;
+            --accent-light: #e8c968;
+            --bg: #fafaf8;
+            --surface: #ffffff;
+            --text: #1a1a1a;
+            --text-light: #666666;
+            --border: #e0dfd8;
+            --success: #2d5555;
+            --warning: #d4af37;
+            --danger: #c44536;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--primary);
+            color: white;
+            padding: 2rem 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-header p {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-menu {
+            padding: 2rem 0;
+        }
+
+        .nav-item {
+            padding: 0.875rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: var(--accent);
+        }
+
+        .nav-item.active {
+            background: rgba(212, 175, 55, 0.15);
+            border-left-color: var(--accent);
+            font-weight: 500;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.8;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 3rem;
+            max-width: 1400px;
+        }
+
+        .page-header {
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .page-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .page-header p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 0.6s ease 0.1s both;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 1.75rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+            transform: translateX(-4px);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            color: var(--success);
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            animation: fadeInUp 0.6s ease 0.2s both;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .section-header h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-light);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-light);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Campaign List */
+        .campaign-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .campaign-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto;
+            gap: 1.5rem;
+            align-items: center;
+            padding: 1.5rem;
+            background: var(--bg);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .campaign-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .campaign-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .campaign-status.active {
+            background: var(--success);
+            box-shadow: 0 0 0 3px rgba(45, 85, 85, 0.2);
+        }
+
+        .campaign-status.draft {
+            background: var(--text-light);
+            box-shadow: 0 0 0 3px rgba(102, 102, 102, 0.2);
+        }
+
+        .campaign-status.scheduled {
+            background: var(--accent);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+
+        .campaign-info h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--primary);
+        }
+
+        .campaign-meta {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .campaign-stats {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+        }
+
+        .campaign-stat span:first-child {
+            color: var(--text-light);
+            margin-right: 0.25rem;
+        }
+
+        .campaign-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            color: var(--text-light);
+        }
+
+        .btn-icon:hover {
+            background: var(--border);
+            color: var(--primary);
+        }
+
+        /* Form Elements */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--primary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Template Cards */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .template-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: var(--surface);
+        }
+
+        .template-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent);
+        }
+
+        .template-preview {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .template-preview::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 255, 255, 0.03) 10px,
+                rgba(255, 255, 255, 0.03) 20px
+            );
+        }
+
+        .template-icon {
+            font-size: 3rem;
+            opacity: 0.6;
+            z-index: 1;
+        }
+
+        .template-info {
+            padding: 1.25rem;
+        }
+
+        .template-info h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .template-info p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .template-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 0.25rem 0.75rem;
+            background: var(--bg);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            border: 1px solid var(--border);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2.5rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .modal-header h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: var(--primary);
+        }
+
+        /* Segment Tags */
+        .segment-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .segment-tag {
+            padding: 0.5rem 1rem;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .segment-tag:hover {
+            border-color: var(--accent);
+        }
+
+        .segment-tag.selected {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Email Editor */
+        .email-editor {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            min-height: 300px;
+            padding: 1.5rem;
+            background: var(--surface);
+            margin: 1rem 0;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(40px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                height: auto;
+            }
+
+            .main-content {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Hide scrollbar but keep functionality */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Guest Marketing</h1>
+                <p>Suite</p>
+            </div>
+            <nav class="nav-menu">
+                <div class="nav-item active" onclick="showPage('dashboard')">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Dashboard
+                </div>
+                <div class="nav-item" onclick="showPage('campaigns')">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    Campaigns
+                </div>
+                <div class="nav-item" onclick="showPage('templates')">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
+                    </svg>
+                    Templates
+                </div>
+                <div class="nav-item" onclick="showPage('guests')">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    Guest List
+                </div>
+                <div class="nav-item" onclick="showPage('analytics')">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    Analytics
+                </div>
+                <div class="nav-item" onclick="showPage('segments')">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                    </svg>
+                    Segments
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="page">
+                <div class="page-header">
+                    <h2>Campaign Dashboard</h2>
+                    <p>Manage your email marketing to repeat guests and members</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Guests</div>
+                        <div class="stat-value">2,847</div>
+                        <div class="stat-change">↑ 12% this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Active Campaigns</div>
+                        <div class="stat-value">8</div>
+                        <div class="stat-change">3 scheduled</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Open Rate</div>
+                        <div class="stat-value">43.2%</div>
+                        <div class="stat-change">↑ 5.3% vs last month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Member Club</div>
+                        <div class="stat-value">584</div>
+                        <div class="stat-change">↑ 23 new members</div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3>Recent Campaigns</h3>
+                        <button class="btn btn-primary" onclick="openNewCampaign()">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            New Campaign
+                        </button>
+                    </div>
+                    <div class="campaign-list">
+                        <div class="campaign-item">
+                            <div class="campaign-status active"></div>
+                            <div class="campaign-info">
+                                <h4>Summer Season Launch 2026</h4>
+                                <div class="campaign-meta">Sent 2 days ago • New Property Launch</div>
+                            </div>
+                            <div class="campaign-stats">
+                                <div class="campaign-stat">
+                                    <span>Sent:</span> 1,247
+                                </div>
+                                <div class="campaign-stat">
+                                    <span>Opens:</span> 523
+                                </div>
+                                <div class="campaign-stat">
+                                    <span>Clicks:</span> 142
+                                </div>
+                            </div>
+                            <div class="campaign-actions">
+                                <button class="btn-icon" title="View">👁</button>
+                                <button class="btn-icon" title="Edit">✏️</button>
+                                <button class="btn-icon" title="Duplicate">📋</button>
+                            </div>
+                        </div>
+                        <div class="campaign-item">
+                            <div class="campaign-status scheduled"></div>
+                            <div class="campaign-info">
+                                <h4>Member Exclusive: Early Access</h4>
+                                <div class="campaign-meta">Scheduled Feb 15 • Member Benefits</div>
+                            </div>
+                            <div class="campaign-stats">
+                                <div class="campaign-stat">
+                                    <span>Recipients:</span> 584
+                                </div>
+                                <div class="campaign-stat">
+                                    <span>Segment:</span> Premium
+                                </div>
+                            </div>
+                            <div class="campaign-actions">
+                                <button class="btn-icon" title="View">👁</button>
+                                <button class="btn-icon" title="Edit">✏️</button>
+                                <button class="btn-icon" title="Cancel">🗑️</button>
+                            </div>
+                        </div>
+                        <div class="campaign-item">
+                            <div class="campaign-status active"></div>
+                            <div class="campaign-info">
+                                <h4>Peak Season Booking Reminder</h4>
+                                <div class="campaign-meta">Sent 5 days ago • High Demand Period</div>
+                            </div>
+                            <div class="campaign-stats">
+                                <div class="campaign-stat">
+                                    <span>Sent:</span> 2,100
+                                </div>
+                                <div class="campaign-stat">
+                                    <span>Opens:</span> 891
+                                </div>
+                                <div class="campaign-stat">
+                                    <span>Clicks:</span> 267
+                                </div>
+                            </div>
+                            <div class="campaign-actions">
+                                <button class="btn-icon" title="View">👁</button>
+                                <button class="btn-icon" title="Edit">✏️</button>
+                                <button class="btn-icon" title="Duplicate">📋</button>
+                            </div>
+                        </div>
+                        <div class="campaign-item">
+                            <div class="campaign-status draft"></div>
+                            <div class="campaign-info">
+                                <h4>New Waterfront Apartments</h4>
+                                <div class="campaign-meta">Draft • Property Launch</div>
+                            </div>
+                            <div class="campaign-stats">
+                                <div class="campaign-stat">
+                                    <span>Status:</span> In Progress
+                                </div>
+                            </div>
+                            <div class="campaign-actions">
+                                <button class="btn-icon" title="Edit">✏️</button>
+                                <button class="btn-icon" title="Delete">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3>Quick Actions</h3>
+                    </div>
+                    <div class="template-grid">
+                        <div class="template-card" onclick="openCampaignWithTemplate('launch')">
+                            <div class="template-preview">
+                                <div class="template-icon">🏢</div>
+                            </div>
+                            <div class="template-info">
+                                <h4>New Apartment Launch</h4>
+                                <p>Announce new properties to repeat guests</p>
+                                <div class="template-tags">
+                                    <span class="tag">Property</span>
+                                    <span class="tag">Launch</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-card" onclick="openCampaignWithTemplate('peak')">
+                            <div class="template-preview">
+                                <div class="template-icon">📅</div>
+                            </div>
+                            <div class="template-info">
+                                <h4>Peak Season Alert</h4>
+                                <p>Notify about high-demand booking periods</p>
+                                <div class="template-tags">
+                                    <span class="tag">Seasonal</span>
+                                    <span class="tag">Urgent</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-card" onclick="openCampaignWithTemplate('offer')">
+                            <div class="template-preview">
+                                <div class="template-icon">🎁</div>
+                            </div>
+                            <div class="template-info">
+                                <h4>Special Offer</h4>
+                                <p>Share exclusive deals and promotions</p>
+                                <div class="template-tags">
+                                    <span class="tag">Promotion</span>
+                                    <span class="tag">Limited</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-card" onclick="openCampaignWithTemplate('member')">
+                            <div class="template-preview">
+                                <div class="template-icon">⭐</div>
+                            </div>
+                            <div class="template-info">
+                                <h4>Member Benefits</h4>
+                                <p>Highlight private club perks and discounts</p>
+                                <div class="template-tags">
+                                    <span class="tag">Members</span>
+                                    <span class="tag">Exclusive</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campaigns Page -->
+            <div id="campaigns-page" class="page" style="display: none;">
+                <div class="page-header">
+                    <h2>All Campaigns</h2>
+                    <p>Manage all your email marketing campaigns</p>
+                </div>
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3>Campaign List</h3>
+                        <div style="display: flex; gap: 1rem;">
+                            <select class="btn btn-outline" style="padding: 0.5rem 1rem;">
+                                <option>All Status</option>
+                                <option>Active</option>
+                                <option>Scheduled</option>
+                                <option>Draft</option>
+                            </select>
+                            <button class="btn btn-primary" onclick="openNewCampaign()">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                New Campaign
+                            </button>
+                        </div>
+                    </div>
+                    <div class="campaign-list">
+                        <!-- Campaign items would be dynamically loaded here -->
+                        <div class="campaign-item">
+                            <div class="campaign-status active"></div>
+                            <div class="campaign-info">
+                                <h4>Summer Season Launch 2026</h4>
+                                <div class="campaign-meta">Sent 2 days ago • New Property Launch</div>
+                            </div>
+                            <div class="campaign-stats">
+                                <div class="campaign-stat"><span>Sent:</span> 1,247</div>
+                                <div class="campaign-stat"><span>Opens:</span> 523</div>
+                                <div class="campaign-stat"><span>Clicks:</span> 142</div>
+                            </div>
+                            <div class="campaign-actions">
+                                <button class="btn-icon">👁</button>
+                                <button class="btn-icon">✏️</button>
+                                <button class="btn-icon">📋</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Templates Page -->
+            <div id="templates-page" class="page" style="display: none;">
+                <div class="page-header">
+                    <h2>Email Templates</h2>
+                    <p>Pre-designed templates for your campaigns</p>
+                </div>
+                <div class="content-section">
+                    <div class="template-grid">
+                        <div class="template-card" onclick="openCampaignWithTemplate('launch')">
+                            <div class="template-preview">
+                                <div class="template-icon">🏢</div>
+                            </div>
+                            <div class="template-info">
+                                <h4>New Apartment Launch</h4>
+                                <p>Perfect for announcing new properties with stunning visuals and booking CTAs</p>
+                                <div class="template-tags">
+                                    <span class="tag">Property</span>
+                                    <span class="tag">Launch</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-card" onclick="openCampaignWithTemplate('peak')">
+                            <div class="template-preview">
+                                <div class="template-icon">📅</div>
+                            </div>
+                            <div class="template-info">
+                                <h4>Peak Season Alert</h4>
+                                <p>Create urgency around high-demand periods with scarcity messaging</p>
+                                <div class="template-tags">
+                                    <span class="tag">Seasonal</span>
+                                    <span class="tag">Urgent</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-card" onclick="openCampaignWithTemplate('offer')">
+                            <div class="template-preview">
+                                <div class="template-icon">🎁</div>
+                            </div>
+                            <div class="template-info">
+                                <h4>Special Offer</h4>
+                                <p>Highlight limited-time promotions with compelling discount displays</p>
+                                <div class="template-tags">
+                                    <span class="tag">Promotion</span>
+                                    <span class="tag">Limited</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-card" onclick="openCampaignWithTemplate('member')">
+                            <div class="template-preview">
+                                <div class="template-icon">⭐</div>
+                            </div>
+                            <div class="template-info">
+                                <h4>Member Benefits</h4>
+                                <p>Showcase exclusive perks and VIP treatment for club members</p>
+                                <div class="template-tags">
+                                    <span class="tag">Members</span>
+                                    <span class="tag">Exclusive</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-card" onclick="openCampaignWithTemplate('welcome')">
+                            <div class="template-preview">
+                                <div class="template-icon">👋</div>
+                            </div>
+                            <div class="template-info">
+                                <h4>Welcome Back</h4>
+                                <p>Re-engage past guests with personalized return incentives</p>
+                                <div class="template-tags">
+                                    <span class="tag">Retention</span>
+                                    <span class="tag">Personal</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-card" onclick="openCampaignWithTemplate('newsletter')">
+                            <div class="template-preview">
+                                <div class="template-icon">📰</div>
+                            </div>
+                            <div class="template-info">
+                                <h4>Monthly Newsletter</h4>
+                                <p>Keep guests informed with property updates and local highlights</p>
+                                <div class="template-tags">
+                                    <span class="tag">Newsletter</span>
+                                    <span class="tag">Regular</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guests Page -->
+            <div id="guests-page" class="page" style="display: none;">
+                <div class="page-header">
+                    <h2>Guest Database</h2>
+                    <p>Manage your repeat guests and member contacts</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Repeat Guests</div>
+                        <div class="stat-value">2,263</div>
+                        <div class="stat-change">Active contacts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Premium Members</div>
+                        <div class="stat-value">584</div>
+                        <div class="stat-change">Club members</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Average Bookings</div>
+                        <div class="stat-value">3.2</div>
+                        <div class="stat-change">Per guest</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Engagement Rate</div>
+                        <div class="stat-value">67%</div>
+                        <div class="stat-change">Active readers</div>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3>Guest Segments</h3>
+                        <button class="btn btn-outline">Import Guests</button>
+                    </div>
+                    <div class="segment-selector">
+                        <div class="segment-tag selected">All Guests (2,847)</div>
+                        <div class="segment-tag">Repeat Guests (2,263)</div>
+                        <div class="segment-tag">Premium Members (584)</div>
+                        <div class="segment-tag">High Value (342)</div>
+                        <div class="segment-tag">Recent Bookers (456)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Page -->
+            <div id="analytics-page" class="page" style="display: none;">
+                <div class="page-header">
+                    <h2>Analytics & Reports</h2>
+                    <p>Track campaign performance and guest engagement</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Emails Sent</div>
+                        <div class="stat-value">24,567</div>
+                        <div class="stat-change">This quarter</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Average Open Rate</div>
+                        <div class="stat-value">43.2%</div>
+                        <div class="stat-change">Industry avg: 21%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Click-Through Rate</div>
+                        <div class="stat-value">12.8%</div>
+                        <div class="stat-change">+2.3% vs last quarter</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Conversion Rate</div>
+                        <div class="stat-value">8.4%</div>
+                        <div class="stat-change">142 bookings</div>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3>Campaign Performance</h3>
+                    </div>
+                    <p style="color: var(--text-light); text-align: center; padding: 3rem;">
+                        Detailed analytics charts and reports would be displayed here with integration to your email service provider.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Segments Page -->
+            <div id="segments-page" class="page" style="display: none;">
+                <div class="page-header">
+                    <h2>Audience Segments</h2>
+                    <p>Create targeted groups for personalized campaigns</p>
+                </div>
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3>Available Segments</h3>
+                        <button class="btn btn-primary">Create Segment</button>
+                    </div>
+                    <div class="campaign-list">
+                        <div class="campaign-item">
+                            <div class="campaign-status active"></div>
+                            <div class="campaign-info">
+                                <h4>Premium Club Members</h4>
+                                <div class="campaign-meta">584 contacts • VIP guests with membership</div>
+                            </div>
+                            <div class="campaign-stats">
+                                <div class="campaign-stat"><span>Avg Opens:</span> 58%</div>
+                                <div class="campaign-stat"><span>Bookings:</span> 4.7/yr</div>
+                            </div>
+                            <div class="campaign-actions">
+                                <button class="btn-icon">✏️</button>
+                            </div>
+                        </div>
+                        <div class="campaign-item">
+                            <div class="campaign-status active"></div>
+                            <div class="campaign-info">
+                                <h4>Repeat Guests (3+ Stays)</h4>
+                                <div class="campaign-meta">1,456 contacts • Loyal returning guests</div>
+                            </div>
+                            <div class="campaign-stats">
+                                <div class="campaign-stat"><span>Avg Opens:</span> 46%</div>
+                                <div class="campaign-stat"><span>Bookings:</span> 3.2/yr</div>
+                            </div>
+                            <div class="campaign-actions">
+                                <button class="btn-icon">✏️</button>
+                            </div>
+                        </div>
+                        <div class="campaign-item">
+                            <div class="campaign-status active"></div>
+                            <div class="campaign-info">
+                                <h4>Peak Season Bookers</h4>
+                                <div class="campaign-meta">892 contacts • Summer/Holiday travelers</div>
+                            </div>
+                            <div class="campaign-stats">
+                                <div class="campaign-stat"><span>Avg Opens:</span> 41%</div>
+                                <div class="campaign-stat"><span>Preferred:</span> Jun-Aug</div>
+                            </div>
+                            <div class="campaign-actions">
+                                <button class="btn-icon">✏️</button>
+                            </div>
+                        </div>
+                        <div class="campaign-item">
+                            <div class="campaign-status active"></div>
+                            <div class="campaign-info">
+                                <h4>New Property Interested</h4>
+                                <div class="campaign-meta">623 contacts • Engaged with launch emails</div>
+                            </div>
+                            <div class="campaign-stats">
+                                <div class="campaign-stat"><span>Avg Opens:</span> 52%</div>
+                                <div class="campaign-stat"><span>Engagement:</span> High</div>
+                            </div>
+                            <div class="campaign-actions">
+                                <button class="btn-icon">✏️</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Campaign Modal -->
+    <div id="campaign-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Campaign</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            
+            <form id="campaign-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Campaign Name</label>
+                        <input type="text" placeholder="e.g., Spring Launch 2026" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Campaign Type</label>
+                        <select id="campaign-type">
+                            <option value="launch">New Apartment Launch</option>
+                            <option value="peak">Peak Season Alert</option>
+                            <option value="offer">Special Offer</option>
+                            <option value="member">Member Benefits</option>
+                            <option value="welcome">Welcome Back</option>
+                            <option value="newsletter">Newsletter</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Subject Line</label>
+                    <input type="text" placeholder="Your guests will see this in their inbox" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Preview Text</label>
+                    <input type="text" placeholder="Additional text shown in email preview">
+                </div>
+
+                <div class="form-group">
+                    <label>Target Audience</label>
+                    <div class="segment-selector">
+                        <div class="segment-tag" onclick="toggleSegment(this)">All Guests</div>
+                        <div class="segment-tag" onclick="toggleSegment(this)">Repeat Guests</div>
+                        <div class="segment-tag selected" onclick="toggleSegment(this)">Premium Members</div>
+                        <div class="segment-tag" onclick="toggleSegment(this)">High Value</div>
+                        <div class="segment-tag" onclick="toggleSegment(this)">Recent Bookers</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Content</label>
+                    <div class="email-editor" contenteditable="true">
+                        <p><strong>Dear Guest,</strong></p>
+                        <p><br></p>
+                        <p>We're excited to share exclusive news with you as a valued member of our community...</p>
+                        <p><br></p>
+                        <p>Start typing your email content here.</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Send Schedule</label>
+                        <select>
+                            <option>Send Immediately</option>
+                            <option>Schedule for Later</option>
+                            <option>Save as Draft</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Send Date & Time</label>
+                        <input type="datetime-local">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                    <button type="button" class="btn btn-secondary">Save Draft</button>
+                    <button type="submit" class="btn btn-primary">Send Campaign</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Page Navigation
+        function showPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // Show selected page
+            document.getElementById(pageName + '-page').style.display = 'block';
+            
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.nav-item').classList.add('active');
+        }
+
+        // Modal Functions
+        function openNewCampaign() {
+            document.getElementById('campaign-modal').classList.add('active');
+        }
+
+        function openCampaignWithTemplate(templateType) {
+            document.getElementById('campaign-type').value = templateType;
+            openNewCampaign();
+        }
+
+        function closeModal() {
+            document.getElementById('campaign-modal').classList.remove('active');
+        }
+
+        // Segment Selection
+        function toggleSegment(element) {
+            element.classList.toggle('selected');
+        }
+
+        // Form Submission
+        document.getElementById('campaign-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Campaign created successfully! In a production environment, this would integrate with your email service provider (e.g., Mailchimp, SendGrid, etc.)');
+            closeModal();
+        });
+
+        // Close modal on outside click
+        document.getElementById('campaign-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Prevent body scroll when modal is open
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.target.classList.contains('active')) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        observer.observe(document.getElementById('campaign-modal'), {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    </script>
+</body>
+</html>

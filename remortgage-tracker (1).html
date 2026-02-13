@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remortgage Tracker - Property Finance Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            background: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: #667eea;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group-wide {
+            grid-column: 1 / -1;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .data-table th {
+            background: #f9fafb;
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .status-new {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-in-progress {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-on-hold {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            color: #667eea;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .summary-box {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 16px;
+            padding-top: 15px;
+            margin-top: 10px;
+            border-top: 2px solid #667eea;
+        }
+
+        .summary-label {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .summary-value {
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .task-item:hover {
+            background: #f3f4f6;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 3px;
+        }
+
+        .task-subtitle {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .task-status {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .task-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .task-submitted {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .task-complete {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-box {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-box h4 {
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .info-box p {
+            color: #374151;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 5px;
+        }
+
+        .info-box strong {
+            color: #667eea;
+        }
+
+        .payment-tracker {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .payment-item {
+            background: white;
+            border: 2px solid #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .payment-item.paid {
+            border-color: #10b981;
+            background: #ecfdf5;
+        }
+
+        .payment-item.pending {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .payment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .payment-title {
+            font-weight: 700;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .payment-amount {
+            font-weight: 700;
+            font-size: 18px;
+            color: #667eea;
+        }
+
+        .payment-status {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 40px;
+            padding-bottom: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: -30px;
+            width: 2px;
+            background: #e5e7eb;
+        }
+
+        .timeline-item:last-child::before {
+            display: none;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #667eea;
+        }
+
+        .timeline-dot.complete {
+            background: #10b981;
+            border-color: #10b981;
+        }
+
+        .timeline-content h4 {
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .timeline-content p {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-bar select, .filter-bar input {
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .property-ref {
+            display: inline-block;
+            background: #eff6ff;
+            color: #1e40af;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .progress-bar-container {
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .document-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .doc-pending {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .doc-submitted {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .doc-approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 Remortgage Tracker</h1>
+            <p class="subtitle">Complete Property Finance & Legal Process Management</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('overview')">📊 Overview</button>
+            <button class="tab" onclick="showTab('remortgages')">🏠 Remortgages</button>
+            <button class="tab" onclick="showTab('parties')">👥 Parties</button>
+            <button class="tab" onclick="showTab('documents')">📄 Documents</button>
+            <button class="tab" onclick="showTab('payments')">💰 Payments</button>
+            <button class="tab" onclick="showTab('reports')">📈 Reports</button>
+        </div>
+
+        <!-- Overview Tab -->
+        <div id="overview" class="content-section active">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Active Remortgages</div>
+                    <div class="metric-value" id="totalActive">0</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Total Loan Value</div>
+                    <div class="metric-value">£<span id="totalLoanValue">0</span></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Net Advances</div>
+                    <div class="metric-value">£<span id="totalNetAdvance">0</span></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Completed</div>
+                    <div class="metric-value" id="totalCompleted">0</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">Active Remortgages</h2>
+                <div id="activeRemortgagesList"></div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">Urgent Actions Required</h2>
+                <div id="urgentActionsList"></div>
+            </div>
+        </div>
+
+        <!-- Remortgages Tab -->
+        <div id="remortgages" class="content-section">
+            <div class="card">
+                <h2 class="section-title">
+                    <span>Add New Remortgage</span>
+                </h2>
+                <form onsubmit="addRemortgage(event)">
+                    <h3 style="color: #667eea; margin-bottom: 15px; font-size: 16px;">Property & Reference</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Property Reference *</label>
+                            <input type="text" id="propertyRef" placeholder="e.g., KEN-2B-01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Property Address *</label>
+                            <input type="text" id="propertyAddress" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Start Date of Legals</label>
+                            <input type="date" id="startDate">
+                        </div>
+                        <div class="form-group">
+                            <label>Target Completion Date</label>
+                            <input type="date" id="targetDate">
+                        </div>
+                    </div>
+
+                    <h3 style="color: #667eea; margin: 25px 0 15px; font-size: 16px;">Parties</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Bank/Lender *</label>
+                            <input type="text" id="bank" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Bank's Solicitor</label>
+                            <input type="text" id="bankSolicitor">
+                        </div>
+                        <div class="form-group">
+                            <label>Company's Solicitor</label>
+                            <input type="text" id="companySolicitor">
+                        </div>
+                        <div class="form-group">
+                            <label>Dual Representation Solicitor</label>
+                            <input type="text" id="dualSolicitor">
+                        </div>
+                    </div>
+
+                    <h3 style="color: #667eea; margin: 25px 0 15px; font-size: 16px;">Valuations & Rental</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>VP Valuation (£)</label>
+                            <input type="number" id="vpValuation" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>MV Valuation (£)</label>
+                            <input type="number" id="mvValuation" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Rental Valuation/Month (£)</label>
+                            <input type="number" id="rentalValuation" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Actual Rental/Month (£)</label>
+                            <input type="number" id="actualRental" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+
+                    <h3 style="color: #667eea; margin: 25px 0 15px; font-size: 16px;">Loan Structure</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Gross Loan (£) *</label>
+                            <input type="number" id="grossLoan" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Variable % Rate</label>
+                            <input type="number" id="variableRate" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Product Fee (%)</label>
+                            <input type="number" id="productFee" step="0.01" placeholder="2.00" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Arrangement Fee (£)</label>
+                            <input type="number" id="arrangementFee" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+
+                    <h3 style="color: #667eea; margin: 25px 0 15px; font-size: 16px;">Costs & Fees</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Legal Fees + VAT (£)</label>
+                            <input type="number" id="legalFees" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Search Costs (£)</label>
+                            <input type="number" id="searchCosts" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Valuation Costs (£)</label>
+                            <input type="number" id="valuationCosts" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Indemnity Insurance (£)</label>
+                            <input type="number" id="insuranceCosts" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+
+                    <h3 style="color: #667eea; margin: 25px 0 15px; font-size: 16px;">Existing Mortgage</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Redemption Amount (£)</label>
+                            <input type="number" id="redemptionAmount" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Existing Lender</label>
+                            <input type="text" id="existingLender">
+                        </div>
+                        <div class="form-group">
+                            <label>Account Number</label>
+                            <input type="text" id="existingAccountNo">
+                        </div>
+                        <div class="form-group">
+                            <label>Sort Code</label>
+                            <input type="text" id="existingSortCode" placeholder="00-00-00">
+                        </div>
+                    </div>
+
+                    <h3 style="color: #667eea; margin: 25px 0 15px; font-size: 16px;">Borrower Company Bank Details</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" id="companyName">
+                        </div>
+                        <div class="form-group">
+                            <label>Bank Name</label>
+                            <input type="text" id="companyBank">
+                        </div>
+                        <div class="form-group">
+                            <label>Account Number</label>
+                            <input type="text" id="companyAccountNo">
+                        </div>
+                        <div class="form-group">
+                            <label>Sort Code</label>
+                            <input type="text" id="companySortCode" placeholder="00-00-00">
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <button type="submit" class="btn btn-primary">➕ Add Remortgage</button>
+                        <button type="button" class="btn btn-secondary" onclick="this.form.reset()">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">All Remortgages</h2>
+                <div class="filter-bar">
+                    <label style="font-weight: 600;">Status:</label>
+                    <select id="statusFilter" onchange="renderRemortgages()">
+                        <option value="all">All</option>
+                        <option value="new">New</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        <option value="on-hold">On Hold</option>
+                    </select>
+                    <label style="font-weight: 600;">Bank:</label>
+                    <select id="bankFilter" onchange="renderRemortgages()">
+                        <option value="all">All Banks</option>
+                    </select>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Property Ref</th>
+                                <th>Address</th>
+                                <th>Bank</th>
+                                <th>Gross Loan</th>
+                                <th>Net Advance</th>
+                                <th>Start Date</th>
+                                <th>Status</th>
+                                <th>Progress</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="remortgagesTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parties Tab -->
+        <div id="parties" class="content-section">
+            <div class="card">
+                <h2 class="section-title">Select Remortgage to View Parties</h2>
+                <select id="partiesRemortgageSelect" onchange="showPartiesDetails()" style="width: 100%; padding: 10px; font-size: 14px; border: 2px solid #e5e7eb; border-radius: 6px;">
+                    <option value="">Select a remortgage...</option>
+                </select>
+            </div>
+
+            <div id="partiesDetails"></div>
+        </div>
+
+        <!-- Documents Tab -->
+        <div id="documents" class="content-section">
+            <div class="card">
+                <h2 class="section-title">Select Remortgage to Manage Documents</h2>
+                <select id="documentsRemortgageSelect" onchange="showDocumentsDetails()" style="width: 100%; padding: 10px; font-size: 14px; border: 2px solid #e5e7eb; border-radius: 6px;">
+                    <option value="">Select a remortgage...</option>
+                </select>
+            </div>
+
+            <div id="documentsDetails"></div>
+        </div>
+
+        <!-- Payments Tab -->
+        <div id="payments" class="content-section">
+            <div class="card">
+                <h2 class="section-title">Select Remortgage to Manage Payments</h2>
+                <select id="paymentsRemortgageSelect" onchange="showPaymentsDetails()" style="width: 100%; padding: 10px; font-size: 14px; border: 2px solid #e5e7eb; border-radius: 6px;">
+                    <option value="">Select a remortgage...</option>
+                </select>
+            </div>
+
+            <div id="paymentsDetails"></div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reports" class="content-section">
+            <div class="card">
+                <h2 class="section-title">Generate Reports</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Report Type</label>
+                        <select id="reportType">
+                            <option value="summary">Portfolio Summary</option>
+                            <option value="property">Property Detail</option>
+                            <option value="financial">Financial Analysis</option>
+                            <option value="outstanding">Outstanding Tasks</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date Range</label>
+                        <select id="reportDateRange">
+                            <option value="all">All Time</option>
+                            <option value="month">This Month</option>
+                            <option value="quarter">This Quarter</option>
+                            <option value="year">This Year</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <button class="btn btn-primary" onclick="exportData('csv')">📥 Export CSV</button>
+                    <button class="btn btn-primary" onclick="exportData('json')">📥 Export JSON</button>
+                    <button class="btn btn-secondary" onclick="printReport()">🖨️ Print Report</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">Portfolio Summary</h2>
+                <div id="portfolioSummary"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let remortgages = [];
+
+        // Initialize
+        async function init() {
+            await loadData();
+            updateOverview();
+            renderRemortgages();
+            updateDropdowns();
+            updatePortfolioSummary();
+        }
+
+        async function loadData() {
+            try {
+                const data = await window.storage.get('remortgages-data');
+                if (data) {
+                    remortgages = JSON.parse(data.value);
+                }
+            } catch (error) {
+                console.log('No saved data');
+            }
+        }
+
+        async function saveData() {
+            try {
+                await window.storage.set('remortgages-data', JSON.stringify(remortgages));
+            } catch (error) {
+                console.error('Error saving:', error);
+            }
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function addRemortgage(event) {
+            event.preventDefault();
+
+            const grossLoan = parseFloat(document.getElementById('grossLoan').value) || 0;
+            const productFeePercent = parseFloat(document.getElementById('productFee').value) || 0;
+            const productFeeAmount = grossLoan * (productFeePercent / 100);
+            const arrangementFee = parseFloat(document.getElementById('arrangementFee').value) || 0;
+            const legalFees = parseFloat(document.getElementById('legalFees').value) || 0;
+            const searchCosts = parseFloat(document.getElementById('searchCosts').value) || 0;
+            const valuationCosts = parseFloat(document.getElementById('valuationCosts').value) || 0;
+            const insuranceCosts = parseFloat(document.getElementById('insuranceCosts').value) || 0;
+            const redemptionAmount = parseFloat(document.getElementById('redemptionAmount').value) || 0;
+
+            // Calculate net loan after product fee deduction
+            const netLoan = grossLoan - productFeeAmount;
+
+            // Calculate total deductions
+            const totalDeductions = arrangementFee + legalFees + searchCosts + valuationCosts + insuranceCosts + redemptionAmount;
+
+            // Calculate net advance to borrower
+            const netAdvance = netLoan - totalDeductions;
+
+            const newRemortgage = {
+                id: Date.now(),
+                propertyRef: document.getElementById('propertyRef').value.toUpperCase(),
+                propertyAddress: document.getElementById('propertyAddress').value,
+                startDate: document.getElementById('startDate').value,
+                targetDate: document.getElementById('targetDate').value,
+                
+                // Parties
+                bank: document.getElementById('bank').value,
+                bankSolicitor: document.getElementById('bankSolicitor').value,
+                companySolicitor: document.getElementById('companySolicitor').value,
+                dualSolicitor: document.getElementById('dualSolicitor').value,
+                
+                // Valuations
+                vpValuation: parseFloat(document.getElementById('vpValuation').value) || 0,
+                mvValuation: parseFloat(document.getElementById('mvValuation').value) || 0,
+                rentalValuation: parseFloat(document.getElementById('rentalValuation').value) || 0,
+                actualRental: parseFloat(document.getElementById('actualRental').value) || 0,
+                
+                // Loan
+                grossLoan: grossLoan,
+                variableRate: parseFloat(document.getElementById('variableRate').value) || 0,
+                productFeePercent: productFeePercent,
+                productFeeAmount: productFeeAmount,
+                netLoan: netLoan,
+                arrangementFee: arrangementFee,
+                
+                // Costs
+                legalFees: legalFees,
+                searchCosts: searchCosts,
+                valuationCosts: valuationCosts,
+                insuranceCosts: insuranceCosts,
+                
+                // Existing mortgage
+                redemptionAmount: redemptionAmount,
+                existingLender: document.getElementById('existingLender').value,
+                existingAccountNo: document.getElementById('existingAccountNo').value,
+                existingSortCode: document.getElementById('existingSortCode').value,
+                
+                // Company bank
+                companyName: document.getElementById('companyName').value,
+                companyBank: document.getElementById('companyBank').value,
+                companyAccountNo: document.getElementById('companyAccountNo').value,
+                companySortCode: document.getElementById('companySortCode').value,
+                
+                // Calculated
+                netAdvance: netAdvance,
+                
+                // Status
+                status: 'new',
+                progress: 0,
+                
+                // Documents tracking
+                documents: {
+                    epc: { status: 'pending', submitted: false },
+                    gasSafety: { status: 'pending', submitted: false },
+                    eicr: { status: 'pending', submitted: false },
+                    buildingRegs: { status: 'pending', submitted: false },
+                    buildingsInsurance: { status: 'pending', policy: '', certificate: '' }
+                },
+                
+                // Payments tracking
+                payments: {
+                    solicitors: { amount: legalFees, paid: false, date: '' },
+                    broker: { amount: 0, paid: false, date: '' },
+                    valuers: { amount: valuationCosts, paid: false, date: '' }
+                },
+                
+                notes: '',
+                createdDate: new Date().toISOString()
+            };
+
+            remortgages.push(newRemortgage);
+            saveData();
+            renderRemortgages();
+            updateOverview();
+            updateDropdowns();
+            updatePortfolioSummary();
+            event.target.reset();
+            alert('Remortgage added successfully!');
+        }
+
+        function renderRemortgages() {
+            const tbody = document.getElementById('remortgagesTable');
+            tbody.innerHTML = '';
+
+            const statusFilter = document.getElementById('statusFilter')?.value || 'all';
+            
+            let filtered = remortgages;
+            if (statusFilter !== 'all') {
+                filtered = filtered.filter(r => r.status === statusFilter);
+            }
+
+            filtered.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate)).forEach(rm => {
+                // Backward compatibility: recalculate if old format
+                if (rm.productFee && !rm.productFeePercent) {
+                    rm.productFeePercent = 0;
+                    rm.productFeeAmount = rm.productFee;
+                } else if (!rm.productFeeAmount && rm.productFeePercent) {
+                    rm.productFeeAmount = rm.grossLoan * (rm.productFeePercent / 100);
+                    rm.netLoan = rm.grossLoan - rm.productFeeAmount;
+                    const totalDeductions = (rm.arrangementFee || 0) + (rm.legalFees || 0) + (rm.searchCosts || 0) + 
+                                          (rm.valuationCosts || 0) + (rm.insuranceCosts || 0) + (rm.redemptionAmount || 0);
+                    rm.netAdvance = rm.netLoan - totalDeductions;
+                }
+
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td><strong>${rm.propertyRef}</strong></td>
+                    <td>${rm.propertyAddress}</td>
+                    <td>${rm.bank}</td>
+                    <td>£${rm.grossLoan.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                    <td><strong>£${rm.netAdvance.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong></td>
+                    <td>${rm.startDate ? new Date(rm.startDate).toLocaleDateString() : '--'}</td>
+                    <td><span class="status-badge status-${rm.status}">${rm.status}</span></td>
+                    <td>
+                        <div style="width: 100px;">
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: ${rm.progress}%"></div>
+                            </div>
+                            <div style="text-align: center; font-size: 11px; margin-top: 3px; font-weight: 600;">${rm.progress}%</div>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-secondary" onclick="viewDetails(${rm.id})">View</button>
+                        <button class="btn btn-warning" onclick="editRemortgage(${rm.id})">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteRemortgage(${rm.id})">Delete</button>
+                    </td>
+                `;
+            });
+        }
+
+        function viewDetails(id) {
+            const rm = remortgages.find(r => r.id === id);
+            if (!rm) return;
+
+            const detailsHTML = `
+                <div class="card">
+                    <h2 class="section-title">
+                        <span>${rm.propertyRef} - ${rm.propertyAddress}</span>
+                        <span class="status-badge status-${rm.status}">${rm.status}</span>
+                    </h2>
+
+                    <div class="info-grid">
+                        <div class="info-box">
+                            <h4>🏦 Bank & Lender</h4>
+                            <p><strong>Bank:</strong> ${rm.bank}</p>
+                            <p><strong>Bank's Solicitor:</strong> ${rm.bankSolicitor || '--'}</p>
+                            <p><strong>Company's Solicitor:</strong> ${rm.companySolicitor || '--'}</p>
+                            <p><strong>Dual Rep Solicitor:</strong> ${rm.dualSolicitor || '--'}</p>
+                        </div>
+
+                        <div class="info-box">
+                            <h4>💰 Valuations</h4>
+                            <p><strong>VP Valuation:</strong> £${rm.vpValuation.toLocaleString()}</p>
+                            <p><strong>MV Valuation:</strong> £${rm.mvValuation.toLocaleString()}</p>
+                            <p><strong>Rental Valuation:</strong> £${rm.rentalValuation.toLocaleString()}/mo</p>
+                            <p><strong>Actual Rental:</strong> £${rm.actualRental.toLocaleString()}/mo</p>
+                        </div>
+
+                        <div class="info-box">
+                            <h4>📅 Timeline</h4>
+                            <p><strong>Start Date:</strong> ${rm.startDate ? new Date(rm.startDate).toLocaleDateString() : '--'}</p>
+                            <p><strong>Target Completion:</strong> ${rm.targetDate ? new Date(rm.targetDate).toLocaleDateString() : '--'}</p>
+                            <p><strong>Created:</strong> ${new Date(rm.createdDate).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-box" style="margin-top: 25px;">
+                        <div class="summary-row">
+                            <span class="summary-label">Gross Loan</span>
+                            <span class="summary-value">£${rm.grossLoan.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Less: Product Fee (${rm.productFeePercent || 0}%)</span>
+                            <span class="summary-value">- £${(rm.productFeeAmount || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Net Loan</span>
+                            <span class="summary-value">£${rm.netLoan.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Less: Arrangement Fee</span>
+                            <span class="summary-value">- £${rm.arrangementFee.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Less: Legal Fees + VAT</span>
+                            <span class="summary-value">- £${rm.legalFees.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Less: Search Costs</span>
+                            <span class="summary-value">- £${rm.searchCosts.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Less: Valuation Costs</span>
+                            <span class="summary-value">- £${rm.valuationCosts.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Less: Indemnity Insurance</span>
+                            <span class="summary-value">- £${rm.insuranceCosts.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Less: Existing Mortgage Redemption</span>
+                            <span class="summary-value">- £${rm.redemptionAmount.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Net Advance to Borrower</span>
+                            <span class="summary-value">£${rm.netAdvance.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                        </div>
+                    </div>
+
+                    <div class="info-grid" style="margin-top: 25px;">
+                        <div class="info-box">
+                            <h4>🏦 Existing Mortgage Details</h4>
+                            <p><strong>Lender:</strong> ${rm.existingLender || '--'}</p>
+                            <p><strong>Account No:</strong> ${rm.existingAccountNo || '--'}</p>
+                            <p><strong>Sort Code:</strong> ${rm.existingSortCode || '--'}</p>
+                            <p><strong>Redemption Amount:</strong> £${rm.redemptionAmount.toLocaleString()}</p>
+                        </div>
+
+                        <div class="info-box">
+                            <h4>🏢 Borrower Company Bank</h4>
+                            <p><strong>Company:</strong> ${rm.companyName || '--'}</p>
+                            <p><strong>Bank:</strong> ${rm.companyBank || '--'}</p>
+                            <p><strong>Account No:</strong> ${rm.companyAccountNo || '--'}</p>
+                            <p><strong>Sort Code:</strong> ${rm.companySortCode || '--'}</p>
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <button class="btn btn-secondary" onclick="closeDetails()">Close</button>
+                    </div>
+                </div>
+            `;
+
+            const modal = document.createElement('div');
+            modal.id = 'detailsModal';
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto; padding: 20px;';
+            modal.innerHTML = `<div style="max-width: 1200px; margin: 40px auto;">${detailsHTML}</div>`;
+            document.body.appendChild(modal);
+        }
+
+        function closeDetails() {
+            const modal = document.getElementById('detailsModal');
+            if (modal) modal.remove();
+        }
+
+        function deleteRemortgage(id) {
+            if (confirm('Delete this remortgage? This cannot be undone.')) {
+                remortgages = remortgages.filter(r => r.id !== id);
+                saveData();
+                renderRemortgages();
+                updateOverview();
+                updateDropdowns();
+                updatePortfolioSummary();
+            }
+        }
+
+        function updateOverview() {
+            const active = remortgages.filter(r => r.status !== 'completed').length;
+            const completed = remortgages.filter(r => r.status === 'completed').length;
+            const totalLoan = remortgages.reduce((sum, r) => sum + r.grossLoan, 0);
+            const totalNet = remortgages.reduce((sum, r) => sum + r.netAdvance, 0);
+
+            document.getElementById('totalActive').textContent = active;
+            document.getElementById('totalCompleted').textContent = completed;
+            document.getElementById('totalLoanValue').textContent = totalLoan.toLocaleString(undefined, {minimumFractionDigits: 2});
+            document.getElementById('totalNetAdvance').textContent = totalNet.toLocaleString(undefined, {minimumFractionDigits: 2});
+
+            // Active remortgages list
+            const activeList = document.getElementById('activeRemortgagesList');
+            const activeRm = remortgages.filter(r => r.status !== 'completed');
+            
+            if (activeRm.length === 0) {
+                activeList.innerHTML = '<p style="color: #666;">No active remortgages</p>';
+            } else {
+                activeList.innerHTML = activeRm.map(rm => `
+                    <div class="info-box" style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <span class="property-ref">${rm.propertyRef}</span>
+                            <span class="status-badge status-${rm.status}">${rm.status}</span>
+                        </div>
+                        <p><strong>Address:</strong> ${rm.propertyAddress}</p>
+                        <p><strong>Bank:</strong> ${rm.bank}</p>
+                        <p><strong>Net Advance:</strong> £${rm.netAdvance.toLocaleString()}</p>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: ${rm.progress}%"></div>
+                        </div>
+                        <div style="text-align: center; font-size: 11px; margin-top: 3px; font-weight: 600;">${rm.progress}% Complete</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function updateDropdowns() {
+            const selects = [
+                document.getElementById('partiesRemortgageSelect'),
+                document.getElementById('documentsRemortgageSelect'),
+                document.getElementById('paymentsRemortgageSelect')
+            ];
+
+            selects.forEach(select => {
+                if (!select) return;
+                const current = select.value;
+                select.innerHTML = '<option value="">Select a remortgage...</option>';
+                remortgages.forEach(rm => {
+                    const option = document.createElement('option');
+                    option.value = rm.id;
+                    option.textContent = `${rm.propertyRef} - ${rm.propertyAddress}`;
+                    select.appendChild(option);
+                });
+                if (current) select.value = current;
+            });
+        }
+
+        function showPartiesDetails() {
+            const id = parseInt(document.getElementById('partiesRemortgageSelect').value);
+            const rm = remortgages.find(r => r.id === id);
+            const container = document.getElementById('partiesDetails');
+
+            if (!rm) {
+                container.innerHTML = '';
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="card">
+                    <h2 class="section-title">${rm.propertyRef} - Parties Involved</h2>
+                    <div class="info-grid">
+                        <div class="info-box">
+                            <h4>🏦 Bank/Lender</h4>
+                            <p><strong>Institution:</strong> ${rm.bank}</p>
+                            <p><strong>Contact:</strong> --</p>
+                            <p><strong>Reference:</strong> --</p>
+                        </div>
+                        <div class="info-box">
+                            <h4>⚖️ Bank's Solicitor</h4>
+                            <p><strong>Firm:</strong> ${rm.bankSolicitor || 'Not assigned'}</p>
+                            <p><strong>Contact:</strong> --</p>
+                            <p><strong>Reference:</strong> --</p>
+                        </div>
+                        <div class="info-box">
+                            <h4>⚖️ Company's Solicitor</h4>
+                            <p><strong>Firm:</strong> ${rm.companySolicitor || 'Not assigned'}</p>
+                            <p><strong>Contact:</strong> --</p>
+                            <p><strong>Reference:</strong> --</p>
+                        </div>
+                        <div class="info-box">
+                            <h4>⚖️ Dual Representation Solicitor</h4>
+                            <p><strong>Firm:</strong> ${rm.dualSolicitor || 'Not applicable'}</p>
+                            <p><strong>Contact:</strong> --</p>
+                            <p><strong>Reference:</strong> --</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showDocumentsDetails() {
+            const id = parseInt(document.getElementById('documentsRemortgageSelect').value);
+            const rm = remortgages.find(r => r.id === id);
+            const container = document.getElementById('documentsDetails');
+
+            if (!rm) {
+                container.innerHTML = '';
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="card">
+                    <h2 class="section-title">${rm.propertyRef} - Required Documents</h2>
+                    <div class="task-list">
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" ${rm.documents.epc.submitted ? 'checked' : ''} onchange="updateDocStatus(${id}, 'epc', this.checked)">
+                            <div class="task-content">
+                                <div class="task-title">EPC Certificate</div>
+                                <div class="task-subtitle">Energy Performance Certificate</div>
+                            </div>
+                            <span class="task-status ${rm.documents.epc.submitted ? 'task-complete' : 'task-pending'}">
+                                ${rm.documents.epc.submitted ? 'Submitted' : 'Pending'}
+                            </span>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" ${rm.documents.gasSafety.submitted ? 'checked' : ''} onchange="updateDocStatus(${id}, 'gasSafety', this.checked)">
+                            <div class="task-content">
+                                <div class="task-title">Gas Safety Certificate</div>
+                                <div class="task-subtitle">Annual gas safety check</div>
+                            </div>
+                            <span class="task-status ${rm.documents.gasSafety.submitted ? 'task-complete' : 'task-pending'}">
+                                ${rm.documents.gasSafety.submitted ? 'Submitted' : 'Pending'}
+                            </span>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" ${rm.documents.eicr.submitted ? 'checked' : ''} onchange="updateDocStatus(${id}, 'eicr', this.checked)">
+                            <div class="task-content">
+                                <div class="task-title">EICR Certificate</div>
+                                <div class="task-subtitle">Electrical Installation Condition Report</div>
+                            </div>
+                            <span class="task-status ${rm.documents.eicr.submitted ? 'task-complete' : 'task-pending'}">
+                                ${rm.documents.eicr.submitted ? 'Submitted' : 'Pending'}
+                            </span>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" ${rm.documents.buildingRegs.submitted ? 'checked' : ''} onchange="updateDocStatus(${id}, 'buildingRegs', this.checked)">
+                            <div class="task-content">
+                                <div class="task-title">Building Regulations Certificate</div>
+                                <div class="task-subtitle">Compliance certificate</div>
+                            </div>
+                            <span class="task-status ${rm.documents.buildingRegs.submitted ? 'task-complete' : 'task-pending'}">
+                                ${rm.documents.buildingRegs.submitted ? 'Submitted' : 'Pending'}
+                            </span>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" ${rm.documents.buildingsInsurance.submitted ? 'checked' : ''} onchange="updateDocStatus(${id}, 'buildingsInsurance', this.checked)">
+                            <div class="task-content">
+                                <div class="task-title">Buildings Insurance</div>
+                                <div class="task-subtitle">Policy & Certificate</div>
+                            </div>
+                            <span class="task-status ${rm.documents.buildingsInsurance.submitted ? 'task-complete' : 'task-pending'}">
+                                ${rm.documents.buildingsInsurance.submitted ? 'Submitted' : 'Pending'}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            updateProgress(id);
+        }
+
+        function updateDocStatus(rmId, docType, submitted) {
+            const rm = remortgages.find(r => r.id === rmId);
+            if (!rm) return;
+
+            rm.documents[docType].submitted = submitted;
+            rm.documents[docType].status = submitted ? 'submitted' : 'pending';
+            
+            saveData();
+            updateProgress(rmId);
+        }
+
+        function updateProgress(rmId) {
+            const rm = remortgages.find(r => r.id === rmId);
+            if (!rm) return;
+
+            const docs = rm.documents;
+            const total = 5;
+            const completed = Object.values(docs).filter(d => d.submitted).length;
+            rm.progress = Math.round((completed / total) * 100);
+
+            saveData();
+            renderRemortgages();
+            updateOverview();
+        }
+
+        function showPaymentsDetails() {
+            const id = parseInt(document.getElementById('paymentsRemortgageSelect').value);
+            const rm = remortgages.find(r => r.id === id);
+            const container = document.getElementById('paymentsDetails');
+
+            if (!rm) {
+                container.innerHTML = '';
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="card">
+                    <h2 class="section-title">${rm.propertyRef} - Payments Tracker</h2>
+                    <div class="payment-tracker">
+                        <div class="payment-item ${rm.payments.solicitors.paid ? 'paid' : 'pending'}">
+                            <div class="payment-header">
+                                <span class="payment-title">Legal Fees</span>
+                                <span class="payment-status ${rm.payments.solicitors.paid ? 'task-complete' : 'task-pending'}">
+                                    ${rm.payments.solicitors.paid ? 'Paid' : 'Pending'}
+                                </span>
+                            </div>
+                            <div class="payment-amount">£${rm.payments.solicitors.amount.toLocaleString()}</div>
+                            <button class="btn ${rm.payments.solicitors.paid ? 'btn-secondary' : 'btn-success'}" 
+                                    onclick="togglePayment(${id}, 'solicitors')" style="width: 100%; margin-top: 10px;">
+                                ${rm.payments.solicitors.paid ? 'Mark Unpaid' : 'Mark Paid'}
+                            </button>
+                        </div>
+                        <div class="payment-item ${rm.payments.broker.paid ? 'paid' : 'pending'}">
+                            <div class="payment-header">
+                                <span class="payment-title">Broker Fee</span>
+                                <span class="payment-status ${rm.payments.broker.paid ? 'task-complete' : 'task-pending'}">
+                                    ${rm.payments.broker.paid ? 'Paid' : 'Pending'}
+                                </span>
+                            </div>
+                            <div class="payment-amount">£${rm.payments.broker.amount.toLocaleString()}</div>
+                            <input type="number" placeholder="Enter amount" style="width: 100%; padding: 8px; margin: 10px 0; border: 2px solid #e5e7eb; border-radius: 6px;" 
+                                   value="${rm.payments.broker.amount || ''}" onchange="updatePaymentAmount(${id}, 'broker', this.value)">
+                            <button class="btn ${rm.payments.broker.paid ? 'btn-secondary' : 'btn-success'}" 
+                                    onclick="togglePayment(${id}, 'broker')" style="width: 100%;">
+                                ${rm.payments.broker.paid ? 'Mark Unpaid' : 'Mark Paid'}
+                            </button>
+                        </div>
+                        <div class="payment-item ${rm.payments.valuers.paid ? 'paid' : 'pending'}">
+                            <div class="payment-header">
+                                <span class="payment-title">Valuation Fee</span>
+                                <span class="payment-status ${rm.payments.valuers.paid ? 'task-complete' : 'task-pending'}">
+                                    ${rm.payments.valuers.paid ? 'Paid' : 'Pending'}
+                                </span>
+                            </div>
+                            <div class="payment-amount">£${rm.payments.valuers.amount.toLocaleString()}</div>
+                            <button class="btn ${rm.payments.valuers.paid ? 'btn-secondary' : 'btn-success'}" 
+                                    onclick="togglePayment(${id}, 'valuers')" style="width: 100%; margin-top: 10px;">
+                                ${rm.payments.valuers.paid ? 'Mark Unpaid' : 'Mark Paid'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function togglePayment(rmId, paymentType) {
+            const rm = remortgages.find(r => r.id === rmId);
+            if (!rm) return;
+
+            rm.payments[paymentType].paid = !rm.payments[paymentType].paid;
+            rm.payments[paymentType].date = rm.payments[paymentType].paid ? new Date().toISOString() : '';
+
+            saveData();
+            showPaymentsDetails();
+        }
+
+        function updatePaymentAmount(rmId, paymentType, amount) {
+            const rm = remortgages.find(r => r.id === rmId);
+            if (!rm) return;
+
+            rm.payments[paymentType].amount = parseFloat(amount) || 0;
+            saveData();
+            showPaymentsDetails();
+        }
+
+        function updatePortfolioSummary() {
+            const container = document.getElementById('portfolioSummary');
+            const totalGross = remortgages.reduce((sum, r) => sum + r.grossLoan, 0);
+            const totalNet = remortgages.reduce((sum, r) => sum + r.netAdvance, 0);
+            const totalFees = remortgages.reduce((sum, r) => sum + r.legalFees + r.arrangementFee + r.searchCosts + r.valuationCosts + r.insuranceCosts, 0);
+
+            container.innerHTML = `
+                <div class="summary-box">
+                    <div class="summary-row">
+                        <span class="summary-label">Total Properties</span>
+                        <span class="summary-value">${remortgages.length}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Total Gross Loans</span>
+                        <span class="summary-value">£${totalGross.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Total Net Advances</span>
+                        <span class="summary-value">£${totalNet.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Total Fees & Costs</span>
+                        <span class="summary-value">£${totalFees.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function exportData(format) {
+            if (format === 'csv') {
+                let csv = 'Property Ref,Address,Bank,Gross Loan,Net Advance,Status,Progress\n';
+                remortgages.forEach(rm => {
+                    csv += `"${rm.propertyRef}","${rm.propertyAddress}","${rm.bank}",${rm.grossLoan},${rm.netAdvance},"${rm.status}",${rm.progress}\n`;
+                });
+                
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'remortgages.csv';
+                a.click();
+            } else if (format === 'json') {
+                const blob = new Blob([JSON.stringify(remortgages, null, 2)], { type: 'application/json' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'remortgages.json';
+                a.click();
+            }
+        }
+
+        function printReport() {
+            window.print();
+        }
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>
